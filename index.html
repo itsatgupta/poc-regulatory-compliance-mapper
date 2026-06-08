@@ -1,0 +1,554 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regulatory Compliance Mapper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: #0f172a;
+            color: white;
+            padding: 24px;
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .header-text h1 {
+            font-size: 28px;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        
+        .header-text p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        
+        .header-badge {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5f3fc;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(99, 102, 241, 0.5);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h2 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #0f172a;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        
+        .hint-text {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #6366f1;
+            font-size: 13px;
+        }
+        
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .results-section {
+            grid-column: 1 / -1;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        th {
+            background: #f8fafc;
+            color: #0f172a;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        
+        tr:hover {
+            background: #f8fafc;
+        }
+        
+        .req-id {
+            color: #6366f1;
+            font-weight: 600;
+            min-width: 60px;
+        }
+        
+        .status-full {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .status-partial {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .status-missing {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .risk-low {
+            color: #059669;
+            font-weight: 600;
+        }
+        
+        .risk-medium {
+            color: #d97706;
+            font-weight: 600;
+        }
+        
+        .risk-high {
+            color: #dc2626;
+            font-weight: 600;
+        }
+        
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+        
+        .empty-state-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            margin-top: 32px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+        
+        footer a {
+            color: #a5f3fc;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Regulatory Compliance Mapper</h1>
+                    <p>Map requirements to regulatory clauses and identify compliance gaps</p>
+                </div>
+                <div class="header-badge">
+                    <span class="badge">BFSI / Healthcare / Pharma</span>
+                    <span class="badge">Compliance Analysis</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="card">
+                <h2>Regulatory Framework</h2>
+                <div class="form-group">
+                    <label for="framework">Select Framework</label>
+                    <select id="framework">
+                        <option value="GDPR">GDPR (General Data Protection Regulation)</option>
+                        <option value="HIPAA">HIPAA (Health Insurance Portability and Accountability Act)</option>
+                        <option value="RBI">RBI Master Circular (Reserve Bank of India)</option>
+                        <option value="PCI-DSS">PCI DSS (Payment Card Industry Data Security Standard)</option>
+                        <option value="SOX">SOX (Sarbanes-Oxley Act)</option>
+                        <option value="CCPA">CCPA (California Consumer Privacy Act)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="industry">Industry</label>
+                    <select id="industry">
+                        <option value="BFSI">BFSI (Banking, Financial Services & Insurance)</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Pharma">Pharmaceutical</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Software Requirements</h2>
+                <div class="form-group">
+                    <label for="requirements">Paste Requirements List</label>
+                    <textarea id="requirements" placeholder="REQ-001: User data must be encrypted at rest&#10;REQ-002: System logs retained for 90 days&#10;REQ-003: User consent required before data processing">REQ-001: User personal data must be encrypted using AES-256 at rest
+REQ-002: System must maintain audit logs for minimum 90 days
+REQ-003: User consent must be obtained before processing personal data
+REQ-004: Data breach notification within 72 hours of discovery
+REQ-005: Regular security assessments and penetration testing required
+REQ-006: User right to data access and portability
+REQ-007: Third-party vendor assessment and SLA compliance
+REQ-008: Password policy: minimum 12 characters with complexity
+REQ-009: Multi-factor authentication for admin access
+REQ-010: Annual compliance reporting to regulatory authorities</textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn-primary" onclick="analyzeRequirements()">
+                        <span id="btnText">Generate Compliance Map</span>
+                    </button>
+                    <button class="btn-secondary" onclick="clearAll()">Clear</button>
+                </div>
+                <div class="hint-text">💡 Try it → Click Generate to analyze requirements</div>
+            </div>
+        </div>
+        
+        <div class="card results-section">
+            <h2>Compliance Mapping Results</h2>
+            <div id="resultsContainer" class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <p>Results will appear here after analysis</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        Powered by Bharat AI · For more information connect <a href="mailto:atulmca@yahoo.com">atulmca@yahoo.com</a>
+    </footer>
+    
+    <script>
+        async function analyzeRequirements() {
+            const framework = document.getElementById('framework').value;
+            const industry = document.getElementById('industry').value;
+            const requirements = document.getElementById('requirements').value.trim();
+            
+            if (!requirements) {
+                showError('Please enter requirements to analyze');
+                return;
+            }
+            
+            const btn = document.querySelector('.btn-primary');
+            const btnText = document.getElementById('btnText');
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="loading"><span class="spinner"></span>Analyzing...</span>';
+            
+            try {
+                const prompt = `You are a regulatory compliance expert. Analyze the following software requirements against the ${framework} regulatory framework for the ${industry} industry.
+
+Requirements:
+${requirements}
+
+For each requirement, provide:
+1. Requirement ID (extract from text)
+2. Requirement (brief summary)
+3. Regulation Clause (e.g., GDPR Article 17, HIPAA §164.312)
+4. Coverage Status (Full/Partial/Missing)
+5. Risk Level (Low/Medium/High)
+
+Format as a structured table with pipe-separated values (|). Include a header row with: Req ID | Requirement | Regulation Clause | Coverage Status | Risk Level
+
+Provide only the table output, no additional explanation.`;
+
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'claude-haiku-4-5-20251001',
+                        max_tokens: 2048,
+                        messages: [{ role: 'user', content: prompt }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const content = data.content[0].text;
+                
+                renderComplianceTable(content);
+            } catch (error) {
+                showError(`Analysis failed: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Generate Compliance Map';
+            }
+        }
+        
+        function renderComplianceTable(tableText) {
+            const lines = tableText.split('\n').filter(line => line.trim());
+            const rows = [];
+            
+            for (let line of lines) {
+                const cells = line.split('|').map(cell => cell.trim()).filter(cell => cell);
+                if (cells.length >= 5) {
+                    rows.push(cells);
+                }
+            }
+            
+            if (rows.length < 2) {
+                showError('Could not parse compliance data');
+                return;
+            }
+            
+            let html = '<div class="table-wrapper"><table>';
+            
+            // Header row
+            html += '<thead><tr>';
+            const headerCells = rows[0];
+            for (let cell of headerCells) {
+                html += `<th>${escapeHtml(cell)}</th>`;
+            }
+            html += '</tr></thead>';
+            
+            // Data rows
+            html += '<tbody>';
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (row.length < 5) continue;
+                
+                html += '<tr>';
+                html += `<td class="req-id">${escapeHtml(row[0])}</td>`;
+                html += `<td>${escapeHtml(row[1])}</td>`;
+                html += `<td>${escapeHtml(row[2])}</td>`;
+                
+                const status = row[3].toLowerCase().trim();
+                let statusClass = 'status-missing';
+                if (status.includes('full')) statusClass = 'status-full';
+                else if (status.includes('partial')) statusClass = 'status-partial';
+                html += `<td><span class="${statusClass}">${escapeHtml(row[3])}</span></td>`;
+                
+                const riskLevel = row[4].toLowerCase().trim();
+                let riskClass = 'risk-low';
+                if (riskLevel.includes('medium')) riskClass = 'risk-medium';
+                else if (riskLevel.includes('high')) riskClass = 'risk-high';
+                html += `<td class="${riskClass}">${escapeHtml(row[4])}</td>`;
+                
+                html += '</tr>';
+            }
+            html += '</tbody></table></div>';
+            
+            document.getElementById('resultsContainer').innerHTML = html;
+        }
+        
+        function showError(message) {
+            document.getElementById('resultsContainer').innerHTML = 
+                `<div class="error-message">⚠️ ${escapeHtml(message)}</div>`;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function clearAll() {
+            document.getElementById('framework').value = 'GDPR';
+            document.getElementById('industry').value = 'BFSI';
+            document.getElementById('requirements').value = `REQ-001: User personal data must be encrypted using AES-256 at rest
+REQ-002: System must maintain audit logs for minimum 90 days
+REQ-003: User consent must be obtained before processing personal data
+REQ-004: Data breach notification within 72 hours of discovery
+REQ-005: Regular security assessments and penetration testing required
+REQ-006: User right to data access and portability
+REQ-007: Third-party vendor assessment and SLA compliance
+REQ-008: Password policy: minimum 12 characters with complexity
+REQ-009: Multi-factor authentication for admin access
+REQ-010: Annual compliance reporting to regulatory authorities`;
+            document.getElementById('resultsContainer').innerHTML = 
+                '<div class="empty-state"><div class="empty-state-icon">📋</div><p>Results will appear here after analysis</p></div>';
+        }
+    </script>
+</body>
+</html>
+```
